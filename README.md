@@ -57,7 +57,7 @@ registro/login → catálogo → agregar al carrito → **Crear orden** (`POST /
 - **Refresco de datos:** `revalidatePath` después de cada mutación.
 - **Sesión:** el JWT se guarda en cookie `httpOnly` (`token`); el navegador nunca lo lee. `src/proxy.ts` (antes `middleware.ts`) protege `/carrito` y `/pedidos`.
 - **Estados de carga y error:** `loading.tsx` (skeletons), `error.tsx` (botón Reintentar con `retry`/`reset`), `not-found.tsx`, `<Suspense>` en catálogo, historial y header.
-- **Rendimiento / Web Vitals:** Server Components por defecto (casi nada de JS en cliente), fuente del sistema (sin descargas), sin imágenes pesadas, `fetch` con `revalidate` y tags, `cache()` de React, metadata por página.
+- **Rendimiento / Web Vitals:** Server Components por defecto (casi nada de JS en cliente), fuente del sistema (sin descargas), imágenes optimizadas con next/image (WebP/AVIF, tamaño fijo), `fetch` con `revalidate` y tags, `cache()` de React, metadata por página.
 
 ## Capturas
 
