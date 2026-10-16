@@ -12,7 +12,9 @@ const users = []; const tokens = new Map(); const orders = []; let oid = 1, uid 
 const send = (res, code, data) => { res.writeHead(code, { "Content-Type": "application/json" }); res.end(data === undefined ? "" : JSON.stringify(data)); };
 const body = (req) => new Promise((r) => { let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => { try { r(JSON.parse(b || "{}")); } catch { r({}); } }); });
 
+const DELAY = Number(process.env.MOCK_DELAY || 0); // ms, para simular una API lenta
 http.createServer(async (req, res) => {
+  if (DELAY) await new Promise((r) => setTimeout(r, DELAY));
   const url = new URL(req.url, "http://x"); const p = url.pathname.replace(/^\/api/, ""); const m = req.method;
   const tok = (req.headers.authorization || "").replace("Bearer ", ""); const user = tokens.get(tok);
   const needAuth = () => { if (!user) { send(res, 401, { message: "Unauthenticated." }); return true; } };

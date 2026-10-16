@@ -58,3 +58,35 @@ registro/login → catálogo → agregar al carrito → **Crear orden** (`POST /
 - **Sesión:** el JWT se guarda en cookie `httpOnly` (`token`); el navegador nunca lo lee. `src/proxy.ts` (antes `middleware.ts`) protege `/carrito` y `/pedidos`.
 - **Estados de carga y error:** `loading.tsx` (skeletons), `error.tsx` (botón Reintentar con `retry`/`reset`), `not-found.tsx`, `<Suspense>` en catálogo, historial y header.
 - **Rendimiento / Web Vitals:** Server Components por defecto (casi nada de JS en cliente), fuente del sistema (sin descargas), sin imágenes pesadas, `fetch` con `revalidate` y tags, `cache()` de React, metadata por página.
+
+## Capturas
+
+### Swagger (API Laravel)
+![Swagger](docs/swagger.png)
+
+### Lighthouse (Desktop: 100 / 100 / 100 / 100)
+![Lighthouse](docs/lighthouse.png)
+
+Reporte completo: [lighthouse-desktop.html](docs/lighthouse-desktop.html)
+
+### Flujo de compra
+**1. Catálogo**
+![Catálogo](docs/catalogo.png)
+
+**2. Carrito**
+![Carrito](docs/carrito.png)
+
+**3. Orden creada**
+![Orden](docs/orden.png)
+
+**4. Pago confirmado con Stripe**
+![Pago](docs/pago.png)
+
+**5. Historial de compras**
+![Historial](docs/historial.png)
+
+## Notas de diseño
+- **Carrito:** vive en una cookie (persistente 7 días) que solo modifican Server Actions; después de cada cambio se llama `revalidatePath`, así el contador del header nunca queda desactualizado.
+- **Imágenes:** la API no guarda fotos; se usan 3 imágenes de ejemplo servidas con `next/image` (AVIF/WebP, tamaño fijo para CLS 0, `priority` en las primeras).
+- **Paginación:** `/productos?page=N` (6 por página) resuelta en el servidor.
+- **Resiliencia:** `loading.tsx` en catálogo, carrito y pedidos; `error.tsx` con botón *Reintentar* en catálogo, carrito y pedidos.

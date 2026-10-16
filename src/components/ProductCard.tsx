@@ -2,11 +2,15 @@ import Link from "next/link";
 import { addToCartAction } from "@/app/actions/cart";
 import { SubmitButton } from "./SubmitButton";
 import { money } from "@/lib/format";
+import { ProductImage } from "./ProductImage";
 import type { Product } from "@/lib/api";
 
-export function ProductCard({ p }: { p: Product }) {
+export function ProductCard({ p, priority = false }: { p: Product; priority?: boolean }) {
   return (
     <article className="card flex flex-col">
+      <Link href={`/productos/${p.id}`} aria-label={p.name} className="mb-3 block">
+        <ProductImage id={p.id} name={p.name} priority={priority} />
+      </Link>
       <Link href={`/productos/${p.id}`} className="text-lg font-semibold hover:text-indigo-600">{p.name}</Link>
       <p className="mt-1 line-clamp-2 flex-1 text-sm text-slate-600">{p.description}</p>
       <div className="mt-4 flex items-center justify-between">

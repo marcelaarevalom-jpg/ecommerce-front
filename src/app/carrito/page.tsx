@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { api, ApiError, type Product } from "@/lib/api";
+import type { Product } from "@/lib/api";
+import { getProduct } from "@/lib/data";
 import { readCart } from "@/lib/cart";
 import { removeFromCartAction } from "@/app/actions/cart";
 import { CheckoutForm } from "@/components/CheckoutForm";
@@ -23,14 +24,7 @@ export default async function CarritoPage() {
   }
 
   // Precios siempre frescos desde la API (no confiamos en lo guardado en la cookie)
-  const productos = await Promise.all(
-    cart.map((l) =>
-      api<Product>(`/products/${l.id}`, { next: { revalidate: 60, tags: ["products"] } }).catch((e) => {
-        if (e instanceof ApiError && e.status === 404) return null;
-        throw e;
-      }),
-    ),
-  );
+  const productos = await Promise.all(cart.map((l) => getProduct(String(l.id))));
   const lineas = cart
     .map((l, i) => ({ ...l, product: productos[i] }))
     .filter((l): l is typeof l & { product: Product } => l.product !== null);
